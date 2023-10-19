@@ -1,19 +1,41 @@
 import { type } from 'os';
-import React from 'react';
-
-function App() {
+import React, { useState } from 'react';
+import "./style.css"
+import Inputfield from './components/Inputfield';
+const App: React.FC = () => {
+  const [formData, setformData] = useState<string>(()=> "");
   type namee = string;
   type userage = number;
-  type person = {
+
+  interface x {
+    gender?: string,
+    nationality?: string
+  }
+
+  interface person extends x {
     name: String,
     age: number,
     lastName?: string
   }
 
+  type g = {
+    gender?: string,
+    nationality?: string
+  }
+
+  type y = g & {
+    name: String,
+    age: number,
+    lastName?: string
+  }
+ 
   const Person: person = {
     name: "henry",
-    age: 31
+    age: 31,
+    gender: "Male"
   }
+
+  
   const man: {name: string, age: number} = {
     name: "Rowland",
     age: 32
@@ -41,7 +63,9 @@ function App() {
   console.log(name)
   return (
     <div className="App">
-      <h1>Hello</h1>
+      <h1 className='heading'>Tasky</h1>
+      <h1>{formData}</h1>
+      <Inputfield todo={formData} setTodo={setformData} />
     </div>
   );
 }
