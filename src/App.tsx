@@ -1,9 +1,49 @@
-import { type } from 'os';
-import React, { useState } from 'react';
-import "./style.css"
-import Inputfield from './components/Inputfield';
+import { type } from "os";
+import React, { useState } from "react";
+import "./style.css";
+import Inputfield from "./components/Inputfield";
+import { todo } from "./components/models";
 const App: React.FC = () => {
-  const [formData, setformData] = useState<string>(()=> "");
+  const [formData, setformData] = useState<string>(() => "");
+  const [todos, setTodos] = useState<todo[]>([]);
+
+  function handleclick(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (todos) {
+      setTodos((oldval) => [
+        ...oldval,
+        { id: Date.now(), todo: formData, isCompleted: false },
+      ]);
+    } else {
+      setTodos([{ id: Date.now(), todo: formData, isCompleted: false }]);
+    }
+    setformData('')
+    console.log("button was clicked");
+  }
+  const myTodos = todos.map((todo) => {
+    return (
+      <div key={todo.id}>
+        <p>{todo.todo}</p>
+      </div>
+    );
+  });
+  return (
+    <div className="App">
+      <h1 className="heading">Tasky</h1>
+      <h1>{formData}</h1>
+      {myTodos}
+      <Inputfield
+        todo={formData}
+        setTodo={setformData}
+        handleclick={handleclick}
+      />
+    </div>
+  );
+};
+
+export default App;
+
+/*
   type namee = string;
   type userage = number;
 
@@ -61,13 +101,4 @@ const App: React.FC = () => {
   let name: namee = "man";
   name = "woman";
   console.log(name)
-  return (
-    <div className="App">
-      <h1 className='heading'>Tasky</h1>
-      <h1>{formData}</h1>
-      <Inputfield todo={formData} setTodo={setformData} />
-    </div>
-  );
-}
-
-export default App;
+  */
