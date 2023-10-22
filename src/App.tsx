@@ -7,7 +7,7 @@ import Tasks from "./components/Tasks";
 const App: React.FC = () => {
   const [formData, setformData] = useState<string>(() => "");
   const [todos, setTodos] = useState<todo[]>([]);
-  //const [edittext, setEditText] = useState<string>(formData)
+  const [editedText, setEditedText] = useState<string>("")
 
   function handleclick(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,7 +48,7 @@ const App: React.FC = () => {
           return val.id === todo? {...val, isCompleted: !val.isCompleted}: val
         })
       })
-
+console.log(editedText)
       
   }
   function handleEditToggle(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
@@ -59,6 +59,14 @@ const App: React.FC = () => {
         return val.id === todo? {...val, isediting: !val.isediting}: val
       })
     })
+    if(editedText){
+      setTodos((oldval)=>{
+        return oldval.map((val)=>{
+          return val.id === todo? {...val, todo: editedText}: val
+        })
+      })
+    }
+    setEditedText("")
 }
   return (
     <div className="App">
@@ -76,8 +84,10 @@ const App: React.FC = () => {
       handleEditToggle={handleEditToggle} 
       todos={todos} 
       handledelete={handledelete} 
-      handletoggle={handletoggle} />
-    
+      handletoggle={handletoggle} 
+      setEditedText={setEditedText}
+      editedText={editedText}
+      />
       
     </div>
   );
