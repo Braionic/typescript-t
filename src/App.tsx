@@ -3,19 +3,21 @@ import React, { useState } from "react";
 import "./style.css";
 import Inputfield from "./components/Inputfield";
 import { todo } from "./components/models";
+import Tasks from "./components/Tasks";
 const App: React.FC = () => {
   const [formData, setformData] = useState<string>(() => "");
   const [todos, setTodos] = useState<todo[]>([]);
+  //const [edittext, setEditText] = useState<string>(formData)
 
   function handleclick(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (todos) {
       setTodos((oldval) => [
         ...oldval,
-        { id: Date.now(), todo: formData, isCompleted: false },
+        { id: Date.now(), todo: formData, isCompleted: false, isediting: false },
       ]);
     } else {
-      setTodos([{ id: Date.now(), todo: formData, isCompleted: false }]);
+      setTodos([{ id: Date.now(), todo: formData, isCompleted: false, isediting: false }]);
     }
     setformData('')
     console.log("button was clicked");
@@ -27,6 +29,37 @@ const App: React.FC = () => {
       </div>
     );
   });
+
+  function handledelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
+    event.preventDefault()
+    console.log(todo)
+    setTodos((oldval)=>{
+      return oldval.filter((val)=>{
+        return val.id !== todo
+      })
+    })
+  }
+
+  function handletoggle(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
+      event.preventDefault()
+      console.log(todo)
+      setTodos((oldval)=> {
+        return oldval.map((val)=>{
+          return val.id === todo? {...val, isCompleted: !val.isCompleted}: val
+        })
+      })
+
+      
+  }
+  function handleEditToggle(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
+    event.preventDefault()
+    console.log(todo)
+    setTodos((oldval)=>{
+      return oldval.map((val)=>{
+        return val.id === todo? {...val, isediting: !val.isediting}: val
+      })
+    })
+}
   return (
     <div className="App">
       <h1 className="heading">Tasky</h1>
@@ -37,6 +70,15 @@ const App: React.FC = () => {
         setTodo={setformData}
         handleclick={handleclick}
       />
+      
+      <Tasks 
+      setTodos={setTodos} 
+      handleEditToggle={handleEditToggle} 
+      todos={todos} 
+      handledelete={handledelete} 
+      handletoggle={handletoggle} />
+    
+      
     </div>
   );
 };

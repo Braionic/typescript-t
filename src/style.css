@@ -36,7 +36,7 @@ width: 80%;
     align-items: center;
     width: 100%;
     position: relative;
-    justify-content: space-between;
+    justify-content: center;
 }
 .field {
     width: 90%;
@@ -57,7 +57,7 @@ width: 80%;
     width: 40px;
     height: 40px;
     position: absolute;
-    right: 10%;
+    right: 5%;
     margin: 12px;
     transition: 0.2 all;
     background-color: #2f74c0;
@@ -71,4 +71,46 @@ width: 80%;
 }
 .submit:hover {
     background-color: rgba(0,0,0, 0.4);
+}
+
+.tasks {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    width: 100%;
+    
+}
+.task-item {
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    width: 20%;
+    height: 50px;
+}
+
+.class-text {
+    margin-right: 20px;
+}
+
+.edit-button {
+    margin-right: 5px;
+}
+.edit-button, .delete-button, .toggle-task {
+    background-color: rgba(0,0,0, 0.1);
+    border: none;
+    cursor: pointer;
+    border-radius: none;
+}
+
+@media (max-width: 600px) {
+    .task-item{
+        width: 40%
+    };
+    
 }
