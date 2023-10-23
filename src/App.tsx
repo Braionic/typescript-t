@@ -10,7 +10,9 @@ const App: React.FC = () => {
   const [editedText, setEditedText] = useState<string>("")
 
   function handleclick(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+    
+    event.preventDefault(); //prevent reload when the handle click button is clicked
+    //set todo task when new task is filled in and submitted
     if (todos) {
       setTodos((oldval) => [
         ...oldval,
@@ -19,9 +21,11 @@ const App: React.FC = () => {
     } else {
       setTodos([{ id: Date.now(), todo: formData, isCompleted: false, isediting: false }]);
     }
-    setformData('')
+    
+    setformData('') //refresh form data
     console.log("button was clicked");
   }
+  //map out todo tasks
   const myTodos = todos.map((todo) => {
     return (
       <div key={todo.id}>
@@ -29,7 +33,7 @@ const App: React.FC = () => {
       </div>
     );
   });
-
+//handle delete task
   function handledelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
     event.preventDefault()
     console.log(todo)
@@ -39,7 +43,7 @@ const App: React.FC = () => {
       })
     })
   }
-
+//handle task completion toggle
   function handletoggle(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
       event.preventDefault()
       console.log(todo)
@@ -48,17 +52,18 @@ const App: React.FC = () => {
           return val.id === todo? {...val, isCompleted: !val.isCompleted}: val
         })
       })
-console.log(editedText)
-      
   }
+
+  //activtes edit form if edit button is clicked
   function handleEditToggle(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
     event.preventDefault()
-    console.log(todo)
     setTodos((oldval)=>{
       return oldval.map((val)=>{
+        //show form field for the item clicked
         return val.id === todo? {...val, isediting: !val.isediting}: val
       })
     })
+    //if texts are found in edited text, update todos with new edited text from that user
     if(editedText){
       setTodos((oldval)=>{
         return oldval.map((val)=>{
