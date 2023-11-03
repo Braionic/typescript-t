@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { todo } from './models'
 import { FaPencilAlt, FaRegTrashAlt, FaTimes, FaRegThumbsUp, FaCheck } from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable, DropResult} from 'react-beautiful-dnd'
-import styled from 'styled-components';
-
-
-
 type Props = {
     todos: todo[],
     setTodos: React.Dispatch<React.SetStateAction<todo[]>>,
@@ -18,22 +14,12 @@ type Props = {
 
 
 const Tasks = ({todos, setEditedText, handledelete, handletoggle, handleEditToggle, editedText}: Props) => {
-    const Container = styled.form`
-    margin: 10px;
-    border: 1px solid black;
-  `;
-
- 
+   
     const mytodos = todos.map((todo, index)=>{
-        const styled = {
-            backgroundColor: todo.isCompleted?'green': 'red',
-            Color: 'white'
-               }
-               
             return (
                 <Draggable draggableId={todo.id.toString()} index={index}>
                 {(provided)=>(
-                    <form {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef} className='task-item' style={styled}>
+                 <form {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef} className='task-item' style={{backgroundColor: todo.isCompleted?'green': 'red', color: 'white', ...provided.draggableProps.style}}>
                     {!todo.isediting?<p className='class-text'>{todo.todo}</p>: <input value={editedText?editedText: todo.todo} onChange={(event)=> setEditedText(event.target.value)} />}
                     <div className='icons'>
                             <button className='edit-button' onClick={(event)=>{handleEditToggle(event, todo.id)}} disabled={todo.isCompleted}>{!todo.isediting?<FaPencilAlt />: <FaCheck />}</button>
