@@ -53,7 +53,6 @@ const App: React.FC = () => {
         })
       })
   }
-
   //activtes edit form if edit button is clicked
   function handleEditToggle(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, todo: number){
     event.preventDefault()
