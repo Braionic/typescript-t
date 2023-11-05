@@ -4,10 +4,13 @@ import "./style.css";
 import Inputfield from "./components/Inputfield";
 import { todo } from "./components/models";
 import Tasks from "./components/Tasks";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+
 const App: React.FC = () => {
   const [formData, setformData] = useState<string>(() => "");
   const [todos, setTodos] = useState<todo[]>([]);
   const [editedText, setEditedText] = useState<string>("")
+  const [completedTodos, setCompletedTodos] = useState<todo[]>([])
 
   function handleclick(event: React.FormEvent<HTMLFormElement>) {
     
@@ -69,10 +72,44 @@ const App: React.FC = () => {
           return val.id === todo? {...val, todo: editedText}: val
         })
       })
+      setEditedText("")
     }
-    setEditedText("")
+
+    
+    
+}
+function handleDrag(result: DropResult){
+  console.log(result)
+  const {source, destination} = result;
+  let active = todos;
+  let complete = completedTodos;
+  let additem;
+  if(!destination) return;
+  if(destination.droppableId === source.droppableId &&
+       destination.index === source.index) 
+       return;
+  if(source.droppableId === "todos"){
+      additem = active[source.index]
+      active.splice(source.index, 1)
+  }else{
+      additem = complete[destination.index]
+      complete?.splice(destination.index, 1)
+  }
+  
+  if(destination.droppableId === "todos"){
+      active.splice(destination.index, 0, additem)
+      
+  }else{
+      complete?.splice(destination.index, 0, additem)
+      
+  }
+ 
+  setCompletedTodos(complete)
+  setTodos(active)
+  
 }
   return (
+    <DragDropContext onDragEnd={handleDrag}>
     <div className="App">
       <h1 className="heading">Tasky</h1>
       <h1>{formData}</h1>
@@ -91,9 +128,12 @@ const App: React.FC = () => {
       handletoggle={handletoggle} 
       setEditedText={setEditedText}
       editedText={editedText}
+      completedTodos={completedTodos}
+      setCompletedTodos={setCompletedTodos}
       />
       
     </div>
+    </DragDropContext>
   );
 };
 

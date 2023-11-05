@@ -9,11 +9,13 @@ type Props = {
     handletoggle: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number)=> void,
     handleEditToggle: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number)=>void,
     setEditedText:  React.Dispatch<React.SetStateAction<string>>,
-    editedText: string
+    editedText: string,
+    completedTodos: todo[],
+    setCompletedTodos: React.Dispatch<React.SetStateAction<todo[]>>
 }
 
 
-const Tasks = ({todos, setEditedText, handledelete, handletoggle, handleEditToggle, editedText}: Props) => {
+const Tasks = ({todos, setTodos, setEditedText, handledelete, handletoggle, handleEditToggle, editedText, completedTodos, setCompletedTodos}: Props) => {
    
     const mytodos = todos.map((todo, index)=>{
             return (
@@ -35,42 +37,52 @@ const Tasks = ({todos, setEditedText, handledelete, handletoggle, handleEditTogg
         
             )
     })
-    const completedMytodos = todos.map((todo)=>{
+    
+    const completedMytodos = completedTodos.map((todo, index)=>{
         return (
             
-            <form className='task-item' style={{backgroundColor: todo.isCompleted?'green': 'red', color: 'white'}}>
-            {!todo.isediting?<p className='class-text'>{todo.todo}</p>: <input value={editedText?editedText: todo.todo} onChange={(event)=> setEditedText(event.target.value)} />}
-            <div className='icons'>
-                    <button className='edit-button' onClick={(event)=>{handleEditToggle(event, todo.id)}} disabled={todo.isCompleted}>{!todo.isediting?<FaPencilAlt />: <FaCheck />}</button>
-                    <button className='delete-button' onClick={(event)=>handledelete(event, todo.id)}><FaRegTrashAlt /></button>
-                    <button className='toggle-task' onClick={(event)=> handletoggle(event, todo.id)}>{todo.isCompleted?<FaRegThumbsUp />: <FaRegThumbsUp />}</button>
-                </div>
-            </form>
+            <Draggable draggableId={todo.id.toString()} index={index}>
+                {(provided)=>(
+                    <form {...provided.draggableProps} ref={provided.innerRef} {...provided.dragHandleProps} className='task-item' style={{backgroundColor: todo.isCompleted?'green': 'red', color: 'white'}}>
+                    {!todo.isediting?<p className='class-text'>{todo.todo}</p>: <input value={editedText?editedText: todo.todo} onChange={(event)=> setEditedText(event.target.value)} />}
+                    <div className='icons'>
+                            <button className='edit-button' onClick={(event)=>{handleEditToggle(event, todo.id)}} disabled={todo.isCompleted}>{!todo.isediting?<FaPencilAlt />: <FaCheck />}</button>
+                            <button className='delete-button' onClick={(event)=>handledelete(event, todo.id)}><FaRegTrashAlt /></button>
+                            <button className='toggle-task' onClick={(event)=> handletoggle(event, todo.id)}>{todo.isCompleted?<FaRegThumbsUp />: <FaRegThumbsUp />}</button>
+                        </div>
+                    </form>
+                )}
+            </Draggable>
            
         )
 })
-function handleDrag(result: DropResult){
-    console.log(result)
-}
+
+
   return (
     
     <div className="tasks">
-        <DragDropContext onDragEnd={handleDrag}>
-        <Droppable droppableId='ROOT'>
+        <Droppable droppableId='todos'>
             {(provided)=>(
                 <div className='droppable-container uncompletedTodo' ref={provided.innerRef} {...provided.droppableProps}>
                 <h3>Todos</h3>
             {mytodos}
+            {provided.placeholder}
             </div>
             )}
         </Droppable>
-        </DragDropContext>
-        <div className='droppable-container completedTodo'>
-            <h3>Completed</h3>
-        {completedMytodos}
-        </div>
+        <Droppable droppableId='completed'>
+            {(provided)=>(
+                <div className='droppable-container completedTodo' ref={provided.innerRef} {...provided.droppableProps}>
+                <h3>Completed</h3>
+            {completedMytodos}
+            {provided.placeholder}
+            </div>
+            )}
+        </Droppable>
+        
         
     </div>
+
   )
 }
 
